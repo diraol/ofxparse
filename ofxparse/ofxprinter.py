@@ -38,9 +38,34 @@ class OfxPrinter():
         self.writeLine("")
 
     def writeSignOn(self, tabs=0):
-        # signon already has newlines and tabs in it
-        # TODO: reimplement signon printing with tabs
-        self.writeLine(self.ofx.signon.__str__(), term="")
+        if self.ofx.signon:
+            self.writeLine("<SIGNONMSGSRSV1>", tabs=tabs)
+            tabs += 1
+            self.writeLine("<SONRS>", tabs=tabs)
+            tabs += 1
+            if self.ofx.signon.code or self.ofx.signon.severity:
+                self.writeLine("<STATUS>", tabs=tabs)
+                if self.ofx.signon.code is not None:
+                    self.writeLine("<CODE>{0}".format(
+                        self.ofx.signon.code
+                    ), tabs=tabs + 1)
+                if self.ofx.signon.severity:
+                    self.writeLine("<SEVERITY>{0}".format(
+                        self.ofx.signon.severity
+                    ), tabs=tabs + 1)
+                self.writeLine("</STATUS>", tabs=tabs)
+            if self.ofx.signon.dtserver:
+                self.writeLine("<DTSERVER>{0}".format(
+                    self.printDate(self.ofx.signon.dtserver)
+                ), tabs=tabs)
+            if self.ofx.signon.language:
+                self.writeLine("<LANGUAGE>{0}".format(
+                    self.ofx.signon.language
+                ), tabs=tabs)
+            tabs -= 1
+            self.writeLine("</SONRS>", tabs=tabs)
+            tabs -= 1
+            self.writeLine("</SIGNONMSGSRSV1>", tabs=tabs)
 
     def printDate(self, dt, msec_digs=3):
         strdt = dt.strftime('%Y%m%d%H%M%S')
