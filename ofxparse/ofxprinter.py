@@ -174,6 +174,44 @@ class OfxPrinter():
 
             self.writeLine("</STMTRS>", tabs=tabs)
 
+    def writeCCStmTrs(self, tabs=3):
+        for acct in self.ofx.accounts:
+            self.writeLine("<CCSTMTRS>", tabs=tabs)
+            tabs += 1
+
+            if acct.curdef:
+                self.writeLine("<CURDEF>{0}".format(
+                    acct.curdef
+                ), tabs=tabs)
+
+            if acct.account_id:
+                self.writeLine("<CCACCTFROM>", tabs=tabs)
+                self.writeLine("<ACCTID>{0}".format(
+                    acct.account_id
+                ), tabs=tabs+1)
+                self.writeLine("</CCACCTFROM>", tabs=tabs)
+
+            self.writeLine("<BANKTRANLIST>", tabs=tabs)
+            tabs += 1
+            self.writeLine("<DTSTART>{0}".format(
+                self.printDate(acct.statement.start_date)
+            ), tabs=tabs)
+            self.writeLine("<DTEND>{0}".format(
+                self.printDate(acct.statement.end_date)
+            ), tabs=tabs)
+
+            for trn in acct.statement.transactions:
+                self.writeTrn(trn, tabs=tabs)
+
+            tabs -= 1
+
+            self.writeLine("</BANKTRANLIST>", tabs=tabs)
+            self.writeLedgerBal(acct.statement, tabs=tabs)
+
+            tabs -= 1
+
+            self.writeLine("</CCSTMTRS>", tabs=tabs)
+
     def writeBankMsgsRsv1(self, tabs=1):
         self.writeLine("<BANKMSGSRSV1>", tabs=tabs)
         tabs += 1
