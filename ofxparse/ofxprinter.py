@@ -7,16 +7,19 @@ class OfxPrinter():
     out_handle = None
     term = "\r\n"
 
-    def __init__(self, ofx, filename, term="\r\n"):
+    def __init__(self, ofx, filename, term="\r\n", tabs=True):
         self.ofx = ofx
         self.out_filename = filename
         self.term = term
+        self.tabs_enabled = tabs
 
     def writeLine(self, data, tabs=0, term=None):
         if term is None:
             term = self.term
 
-        tabbing = (tabs * "\t") if (tabs > 0) else ''
+        tabbing = ''
+        if self.tabs_enabled:
+            tabbing = (tabs * "\t") if (tabs > 0) else ''
 
         return self.out_handle.write(
             "{0}{1}{2}".format(
