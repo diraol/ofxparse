@@ -236,6 +236,30 @@ class OfxPrinter():
         tabs -= 1
         self.writeLine("</BANKMSGSRSV1>", tabs=tabs)
 
+    def writeCreditCardMsgsRsv1(self, tabs=1):
+        self.writeLine("<CREDITCARDMSGSRSV1>", tabs=tabs)
+        tabs += 1
+        self.writeLine("<CCSTMTTRNRS>", tabs=tabs)
+        tabs += 1
+        if self.ofx.trnuid is not None:
+            self.writeLine("<TRNUID>{0}".format(
+                self.ofx.trnuid
+            ), tabs=tabs)
+        if self.ofx.status:
+            self.writeLine("<STATUS>", tabs=tabs)
+            self.writeLine("<CODE>{0}".format(
+                self.ofx.status['code']
+            ), tabs=tabs+1)
+            self.writeLine("<SEVERITY>{0}".format(
+                self.ofx.status['severity']
+            ), tabs=tabs+1)
+            self.writeLine("</STATUS>", tabs=tabs)
+        self.writeCCStmTrs(tabs=tabs)
+        tabs -= 1
+        self.writeLine("</CCSTMTTRNRS>", tabs=tabs)
+        tabs -= 1
+        self.writeLine("</CREDITCARDMSGSRSV1>", tabs=tabs)
+
     def writeOfx(self, tabs=0):
         self.writeLine("<OFX>", tabs=tabs)
         tabs += 1
