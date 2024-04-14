@@ -259,6 +259,9 @@ class Signon:
         else:
             self.success = False
 
+        self.dtserver = OfxParser.parseOfxDateTime(
+            self.dtserver.strip())
+
     def __str__(self):
         ret = "\t<SIGNONMSGSRSV1>\r\n" + "\t\t<SONRS>\r\n" + \
               "\t\t\t<STATUS>\r\n"
