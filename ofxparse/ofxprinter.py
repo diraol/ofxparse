@@ -93,7 +93,8 @@ class OfxPrinter():
                 trn.checknum
             ), tabs=tabs)
 
-        self.writeLine("<NAME>{}".format(trn.payee), tabs=tabs)
+        if len(trn.payee) > 0:
+            self.writeLine("<NAME>{}".format(trn.payee), tabs=tabs)
 
         if len(trn.memo.strip()) > 0:
             self.writeLine("<MEMO>{}".format(trn.memo), tabs=tabs)
