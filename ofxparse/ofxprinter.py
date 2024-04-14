@@ -264,7 +264,10 @@ class OfxPrinter():
         self.writeLine("<OFX>", tabs=tabs)
         tabs += 1
         self.writeSignOn(tabs=tabs)
-        self.writeBankMsgsRsv1(tabs=tabs)
+        if self.ofx.account.type == 2:
+            self.writeCreditCardMsgsRsv1(tabs=tabs)
+        else:
+            self.writeBankMsgsRsv1(tabs=tabs)
         tabs -= 1
         # No newline at end of file
         self.writeLine("</OFX>", tabs=tabs, term="")
